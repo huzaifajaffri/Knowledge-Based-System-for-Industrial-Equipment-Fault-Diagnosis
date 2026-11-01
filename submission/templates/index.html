@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpertDiag™ // Industrial Equipment KBS</title>
+    
+    <!-- Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+
+    <!-- ================================================================== -->
+    <!-- TOP APPLICATION BAR                                                -->
+    <!-- ================================================================== -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand-group">
+                <div class="brand-badge">
+                    <svg class="brand-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </div>
+                <div>
+                    <div class="brand-title">EXPERT-DIAG <span class="brand-tag">v2.4 PRO</span></div>
+                    <div class="brand-sub">KBS Industrial Equipment Fault Diagnosis & Telemetry Corroboration</div>
+                </div>
+            </div>
+
+            <div class="system-status-group">
+                <div class="status-indicator">
+                    <span class="status-pulse"></span>
+                    <span class="status-label">Inference Engine: Active</span>
+                </div>
+                <div class="header-divider"></div>
+                <div class="kpi-group" id="headerStats">
+                    <div class="kpi-item"><span class="kpi-label">Machinery:</span> <span class="kpi-val" id="kpiMachines">4</span></div>
+                    <div class="kpi-item"><span class="kpi-label">Rules:</span> <span class="kpi-val" id="kpiRules">299</span></div>
+                    <div class="kpi-item"><span class="kpi-label">Symptoms:</span> <span class="kpi-val" id="kpiSymptoms">86</span></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================================================================== -->
+    <!-- WORKSPACE / MAIN BODY                                              -->
+    <!-- ================================================================== -->
+    <main class="workspace">
+
+        <!-- Progress Stepper Tracker -->
+        <nav class="stepper-nav">
+            <div class="step-pill active" id="pillStep1">
+                <span class="pill-num">01</span>
+                <span class="pill-text">Select Equipment</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pillStep2">
+                <span class="pill-num">02</span>
+                <span class="pill-text">Symptom Checklist</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pillStep3">
+                <span class="pill-num">03</span>
+                <span class="pill-text">SCADA Telemetry</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-pill" id="pillStep4">
+                <span class="pill-num">04</span>
+                <span class="pill-text">Diagnosis & Actions</span>
+            </div>
+        </nav>
+
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <!-- STEP 1: EQUIPMENT SELECTION                                   -->
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <section class="panel-section" id="stepMachine">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">STEP 01 // TAXONOMY</span>
+                    <h2 class="section-title">Select Target Machinery Frame</h2>
+                    <p class="section-caption">Choose the industrial apparatus exhibiting operational anomalies to load its domain production rules.</p>
+                </div>
+            </div>
+
+            <div class="machine-cards-grid" id="machineGrid">
+                <!-- Loaded dynamically by app.js -->
+                <div class="loading-state">
+                    <div class="pulse-ring"></div>
+                    <p>Scanning Knowledge Base frames...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <!-- STEP 2: SYMPTOM OBSERVATIONS                                  -->
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <section class="panel-section hidden" id="stepSymptoms">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">STEP 02 // EVIDENCE CAPTURE</span>
+                    <h2 class="section-title">Observable Symptoms on <span class="highlight-text" id="selectedMachineName">Machine</span></h2>
+                    <p class="section-caption">Mark all perceptual, acoustic, thermal, or operational abnormalities detected by field technicians.</p>
+                </div>
+                <div class="selection-counter-badge">
+                    Selected: <strong id="selectedCount">0</strong> symptoms
+                </div>
+            </div>
+
+            <!-- Search & Filter Bar -->
+            <div class="symptom-control-bar">
+                <div class="search-input-wrap">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="symptomSearch" placeholder="Type to filter symptoms by keyword (e.g. vibration, overheats, pressure, leaks)..." autocomplete="off">
+                    <button class="clear-search-btn hidden" id="btnClearSearch" title="Clear search">×</button>
+                </div>
+                <div class="batch-buttons">
+                    <button type="button" class="btn-ghost" onclick="selectAllVisibleSymptoms()">Select All</button>
+                    <button type="button" class="btn-ghost" onclick="clearSelectedSymptoms()">Clear</button>
+                </div>
+            </div>
+
+            <div class="symptom-checklist" id="symptomList">
+                <!-- Injected via app.js -->
+            </div>
+        </section>
+
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <!-- STEP 3: SCADA / SENSOR TELEMETRY                              -->
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <section class="panel-section hidden" id="stepSensors">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">STEP 03 // TELEMETRY CORROBORATION (OPTIONAL)</span>
+                    <h2 class="section-title">SCADA Operational Telemetry</h2>
+                    <p class="section-caption">Empirical physical telemetry feeds into statistical threshold rules from the <strong>AI4I 2020 Predictive Maintenance Dataset</strong> to corroborate qualitative observations.</p>
+                </div>
+                <div class="preset-pills">
+                    <span class="preset-label">Test Scenarios:</span>
+                    <button type="button" class="preset-btn" onclick="applyTelemetryPreset('normal')">Baseline Normal</button>
+                    <button type="button" class="preset-btn warning" onclick="applyTelemetryPreset('hdf')">Thermal (HDF)</button>
+                    <button type="button" class="preset-btn danger" onclick="applyTelemetryPreset('osf')">Overstrain (OSF)</button>
+                    <button type="button" class="preset-btn reset" onclick="applyTelemetryPreset('clear')">Reset</button>
+                </div>
+            </div>
+
+            <div class="telemetry-grid">
+                <!-- Air Temperature -->
+                <div class="telemetry-card">
+                    <div class="telemetry-top">
+                        <span class="telemetry-name">Air Temperature</span>
+                        <span class="telemetry-unit">[K]</span>
+                    </div>
+                    <div class="input-with-unit">
+                        <input type="number" id="sensorAirTemp" placeholder="300.0" step="0.1">
+                    </div>
+                    <div class="telemetry-meta">Ambient air baseline: ~298 - 303 K</div>
+                </div>
+
+                <!-- Process Temperature -->
+                <div class="telemetry-card">
+                    <div class="telemetry-top">
+                        <span class="telemetry-name">Process Temperature</span>
+                        <span class="telemetry-unit">[K]</span>
+                    </div>
+                    <div class="input-with-unit">
+                        <input type="number" id="sensorProcessTemp" placeholder="310.5" step="0.1">
+                    </div>
+                    <div class="telemetry-meta">HDF threshold: &gt; 310 K &amp; &Delta;T &gt; 8.6 K</div>
+                </div>
+
+                <!-- Rotational Speed -->
+                <div class="telemetry-card">
+                    <div class="telemetry-top">
+                        <span class="telemetry-name">Rotational Speed</span>
+                        <span class="telemetry-unit">[rpm]</span>
+                    </div>
+                    <div class="input-with-unit">
+                        <input type="number" id="sensorSpeed" placeholder="1500" step="1">
+                    </div>
+                    <div class="telemetry-meta">Nominal band: 1300 - 2800 rpm</div>
+                </div>
+
+                <!-- Drive Torque -->
+                <div class="telemetry-card">
+                    <div class="telemetry-top">
+                        <span class="telemetry-name">Shaft Torque</span>
+                        <span class="telemetry-unit">[Nm]</span>
+                    </div>
+                    <div class="input-with-unit">
+                        <input type="number" id="sensorTorque" placeholder="42.5" step="0.1">
+                    </div>
+                    <div class="telemetry-meta">OSF threshold: &gt; 60 Nm | PWF: &gt; 70 Nm</div>
+                </div>
+
+                <!-- Tool / Component Wear -->
+                <div class="telemetry-card">
+                    <div class="telemetry-top">
+                        <span class="telemetry-name">Tool / Bearing Wear</span>
+                        <span class="telemetry-unit">[min]</span>
+                    </div>
+                    <div class="input-with-unit">
+                        <input type="number" id="sensorWear" placeholder="85" step="1">
+                    </div>
+                    <div class="telemetry-meta">Critical fatigue band: &gt; 200 min</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Command Execution Bar -->
+        <div class="command-bar hidden" id="actionBar">
+            <button type="button" class="btn-action secondary" onclick="goBack()">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Change Equipment
+            </button>
+            <button type="button" class="btn-action primary" id="btnDiagnose" onclick="runDiagnosis()">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                Execute Forward Chaining Inference
+            </button>
+        </div>
+
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <!-- STEP 4: DIAGNOSTIC AUDIT & RESULTS                            -->
+        <!-- ───────────────────────────────────────────────────────────── -->
+        <section class="panel-section hidden" id="stepResults">
+            <div class="section-header">
+                <div>
+                    <span class="section-tag">STEP 04 // DEDUCTIVE SYNTHESIS</span>
+                    <h2 class="section-title">Inference Results &amp; Action Plan</h2>
+                    <p class="section-caption">Synthesized via Modus Ponens forward chaining with Shortliffe &amp; Buchanan Certainty Factor algebra.</p>
+                </div>
+                <div class="results-actions">
+                    <button type="button" class="btn-ghost" onclick="window.print()">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Print Report
+                    </button>
+                    <button type="button" class="btn-ghost primary" onclick="resetAll()">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                        New Session
+                    </button>
+                </div>
+            </div>
+
+            <div id="resultsContainer">
+                <!-- Dynamically rendered -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================================================================== -->
+    <!-- FOOTER                                                             -->
+    <!-- ================================================================== -->
+    <footer class="app-footer">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <strong>Knowledge-Based Systems (CT-359)</strong> · Industrial Fault Diagnosis Project
+            </div>
+            <div class="footer-right">
+                Forward Chaining (Modus Ponens) · Minsky Frames · MYCIN Certainty Factors · AI4I 2020 Dataset
+            </div>
+        </div>
+    </footer>
+
+    <!-- Frontend Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

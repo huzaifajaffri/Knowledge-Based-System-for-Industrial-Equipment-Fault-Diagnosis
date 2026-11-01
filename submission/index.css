@@ -1,0 +1,1237 @@
+/* ==========================================================================
+   KNOWLEDGE-BASED SYSTEM (KBS) - INDUSTRIAL EQUIPMENT FAULT DIAGNOSIS
+   File: index.css
+   Theme: Industrial Cyberpunk / Dark Glassmorphic Precision Dashboard
+   Author: KBS Development Team
+   Purpose: Client-side UI stylesheet with pure CSS styling, animations,
+            glassmorphism, and responsive layout.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. GOOGLE FONT IMPORT & CSS VARIABLES (DESIGN TOKENS)
+   --------------------------------------------------------------------------
+   Inter is chosen for its geometric precision, high legibility on dark
+   screens, and extensive weight range (300 to 800) suitable for telemetry. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* --- Primary Color Palette --- */
+  --bg-deep: #0a0e1a;                 /* Deepest space background */
+  --bg-surface: #111827;              /* Slate dark container background */
+  --bg-surface-elevated: #1e293b;     /* Elevated panel background */
+  --bg-surface-hover: rgba(30, 41, 59, 0.7);
+
+  /* --- Glassmorphic Token Values --- */
+  --card-bg: rgba(17, 25, 40, 0.75);  /* Semi-transparent dark surface */
+  --card-bg-active: rgba(26, 38, 64, 0.85);
+  --card-border: rgba(255, 255, 255, 0.08); /* Subtle crisp highlight */
+  --card-border-hover: rgba(96, 165, 250, 0.4);
+  --backdrop-blur: blur(16px);
+  --backdrop-blur-sm: blur(8px);
+
+  /* --- Vibrant Accents & Industrial Indicators --- */
+  --primary: #3b82f6;                 /* Vibrant royal blue */
+  --primary-light: #60a5fa;           /* Sky blue accent */
+  --primary-dark: #1d4ed8;            /* Deep navy blue */
+  --primary-glow: rgba(59, 130, 246, 0.35);
+
+  --accent-cyan: #06b6d4;             /* Industrial cyan telemetry */
+  --accent-purple: #8b5cf6;           /* Neural network / inference accent */
+
+  /* --- Status / Safety Colors --- */
+  --success: #10b981;                 /* Emerald green (Healthy / Low Risk) */
+  --success-glow: rgba(16, 185, 129, 0.3);
+  --warning: #f59e0b;                 /* Amber orange (Caution / Medium Risk) */
+  --warning-glow: rgba(245, 158, 11, 0.3);
+  --danger: #ef4444;                  /* Vibrant red (Critical Failure) */
+  --danger-glow: rgba(239, 68, 68, 0.35);
+  --high-risk: #f97316;               /* Flame orange (High Risk) */
+
+  /* --- Typography & Text Hierarchy --- */
+  --text-main: #f1f5f9;               /* High-contrast crisp white */
+  --text-muted: #94a3b8;              /* Secondary gray label */
+  --text-subtle: #64748b;             /* Dim hints and units */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* --- Geometry & Elevation --- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 36px -6px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 25px var(--primary-glow);
+
+  /* --- Interaction Transitions --- */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. GLOBAL RESET & BASE STYLES
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #0a0e1a 0%, #111827 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   3. CUSTOM SCROLLBAR (SLIM INDUSTRIAL STYLE)
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 14, 26, 0.7);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   4. TYPOGRAPHY HIERARCHY
+   -------------------------------------------------------------------------- */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+p {
+  color: var(--text-muted);
+}
+
+code, .code-snippet {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.2em 0.4em;
+  border-radius: var(--radius-sm);
+  color: var(--primary-light);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   5. CONTAINER & LAYOUT ARCHITECTURE
+   -------------------------------------------------------------------------- */
+/* .app-container: Centered maximum-width master grid wrapper */
+.app-container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* --------------------------------------------------------------------------
+   6. HEADER & METADATA BAR
+   -------------------------------------------------------------------------- */
+/* .header: Application title with dual-gradient text and cyber glow */
+.header {
+  text-align: center;
+  padding: 2.5rem 1.5rem 2rem;
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ambient glow accent behind title */
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px;
+  height: 150px;
+  background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.25), transparent 70%);
+  pointer-events: none;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary-light);
+  margin-bottom: 0.85rem;
+}
+
+.header-badge .badge-dot {
+  width: 7px;
+  height: 7px;
+  background-color: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--success);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.header h1 {
+  background: linear-gradient(135deg, #ffffff 20%, var(--primary-light) 60%, var(--accent-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  font-size: 2.25rem;
+}
+
+.header .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* .stats-bar: Operational banner displaying active rule metrics */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.stat-item strong {
+  color: var(--text-main);
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.stat-icon {
+  color: var(--primary-light);
+  display: inline-flex;
+}
+
+/* --------------------------------------------------------------------------
+   7. SECTION HEADERS WITH DECORATIVE ACCENTS
+   -------------------------------------------------------------------------- */
+/* .section-title: Section headers with decorative line */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  font-size: 1.35rem;
+  color: var(--text-main);
+}
+
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.4) 0%, rgba(255, 255, 255, 0.05) 100%);
+  margin-left: 0.5rem;
+}
+
+.section-title .section-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-light);
+  font-size: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   8. MACHINE SELECTOR & CARDS
+   -------------------------------------------------------------------------- */
+/* .machine-selector: Responsive grid of 4 machine cards */
+.machine-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  width: 100%;
+}
+
+/* .machine-card: Glassmorphic card with icon, name, description, hover scale+glow */
+.machine-card {
+  position: relative;
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem 1.4rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  user-select: none;
+  overflow: hidden;
+}
+
+.machine-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  transition: background var(--transition-normal);
+}
+
+.machine-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  background: var(--card-bg-active);
+  border-color: var(--card-border-hover);
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.5), 0 0 20px var(--primary-glow);
+}
+
+/* .machine-card.active: Selected state with vibrant blue border glow */
+.machine-card.active {
+  background: rgba(23, 37, 68, 0.85);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 25px var(--primary-glow);
+  transform: translateY(-2px);
+}
+
+.machine-card.active::before {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--accent-cyan) 100%);
+}
+
+.machine-icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--primary-light);
+  transition: all var(--transition-normal);
+}
+
+.machine-card:hover .machine-icon-wrapper,
+.machine-card.active .machine-icon-wrapper {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--primary);
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+.machine-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.machine-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.machine-badge {
+  margin-top: auto;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-subtle);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.machine-card.active .machine-badge {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--primary-light);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   9. DIAGNOSTIC WORKSPACE TWO-COLUMN SPLIT
+   -------------------------------------------------------------------------- */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   10. SYMPTOM PANEL & CUSTOM CHECKBOXES
+   -------------------------------------------------------------------------- */
+/* .symptom-panel: Scrollable symptom checklist area */
+.symptom-panel {
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.panel-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.symptom-filter-input {
+  width: 100%;
+  max-width: 260px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.85rem;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.symptom-filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.symptom-filter-input::placeholder {
+  color: var(--text-subtle);
+}
+
+.symptom-list-scroll {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* .symptom-item: Individual symptom checkbox row with hover highlight */
+.symptom-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  user-select: none;
+}
+
+.symptom-item:hover {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+  transform: translateX(3px);
+}
+
+.symptom-item.selected {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+}
+
+/* .symptom-item input[type=checkbox]: Custom styled checkboxes */
+.symptom-item input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+}
+
+.symptom-item input[type="checkbox"]:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 8px var(--primary-glow);
+}
+
+.symptom-item input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.symptom-item input[type="checkbox"]:checked::after {
+  content: '';
+  width: 5px;
+  height: 10px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.symptom-label {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.4;
+  flex: 1;
+}
+
+.symptom-component-tag {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   11. SENSOR PANEL & INPUT FIELDS
+   -------------------------------------------------------------------------- */
+/* .sensor-panel: Sensor data input section with input fields */
+.sensor-panel {
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sensor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.sensor-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sensor-field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.sensor-field-label span.unit {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--primary-light);
+}
+
+.sensor-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* .sensor-input: Styled number inputs */
+.sensor-input {
+  width: 100%;
+  background: rgba(10, 14, 26, 0.6);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  padding: 0.65rem 0.85rem;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all var(--transition-fast);
+}
+
+.sensor-input:focus {
+  border-color: var(--primary);
+  background: rgba(17, 24, 39, 0.85);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.sensor-input::placeholder {
+  color: var(--text-subtle);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+}
+
+/* Remove up/down spinners in WebKit */
+.sensor-input::-webkit-outer-spin-button,
+.sensor-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.sensor-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.sensor-hint {
+  font-size: 0.72rem;
+  color: var(--text-subtle);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------------------
+   12. DIAGNOSE ACTION BUTTON & CONTROLS
+   -------------------------------------------------------------------------- */
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+/* .diagnose-btn: Large gradient button with pulse animation on hover */
+.diagnose-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.95rem 2.25rem;
+  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #06b6d4 100%);
+  background-size: 200% auto;
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 8px 25px -4px rgba(37, 99, 235, 0.5);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.diagnose-btn:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -2px rgba(37, 99, 235, 0.65), 0 0 25px rgba(6, 182, 212, 0.4);
+  animation: pulse 1.8s infinite;
+}
+
+.diagnose-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+}
+
+.diagnose-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  animation: none;
+}
+
+/* .back-btn: Back/reset button */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* --------------------------------------------------------------------------
+   13. RESULTS PANEL & DIAGNOSIS CARDS
+   -------------------------------------------------------------------------- */
+/* .results-panel: Results area container */
+.results-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.results-header-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-lg);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* .result-card: Individual diagnosis result card with certainty bar */
+.result-card {
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.result-card:hover {
+  border-color: var(--card-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.result-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.result-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.result-component {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--primary-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.result-fault-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* .safety-badge: Colored badge (critical=red, high=orange, medium=yellow, low=green) */
+.safety-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.safety-badge.critical {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 10px var(--danger-glow);
+}
+
+.safety-badge.high {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fdba74;
+  border: 1px solid rgba(249, 115, 22, 0.4);
+}
+
+.safety-badge.medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fde047;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.safety-badge.low {
+  background: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+/* .certainty-bar: Animated progress bar showing certainty % */
+.certainty-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.certainty-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fillBar 1s ease-out forwards;
+  position: relative;
+}
+
+/* Gradient fill based on certainty tier */
+.certainty-fill.high-tier {
+  background: linear-gradient(90deg, #2563eb 0%, #10b981 100%);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+.certainty-fill.mid-tier {
+  background: linear-gradient(90deg, #2563eb 0%, #f59e0b 100%);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.certainty-fill.low-tier {
+  background: linear-gradient(90deg, #64748b 0%, #ef4444 100%);
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
+.certainty-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.certainty-percentage {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+/* Remedy Box inside Result Card */
+.remedy-box {
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 1rem 1.25rem;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.remedy-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+.remedy-content {
+  font-size: 0.9rem;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   14. EXPLANATION PANEL & INFERENCE AUDIT TRAIL
+   -------------------------------------------------------------------------- */
+/* .explanation-panel: Expandable explanation section */
+.explanation-panel {
+  background: rgba(10, 14, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.explanation-toggle {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-fast);
+}
+
+.explanation-toggle:hover {
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--text-main);
+}
+
+.explanation-toggle .chevron {
+  transition: transform var(--transition-fast);
+}
+
+.explanation-toggle.expanded .chevron {
+  transform: rotate(180deg);
+}
+
+.explanation-content {
+  padding: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* .reasoning-step: Individual reasoning step with step number */
+.reasoning-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.reasoning-step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--primary);
+  color: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}
+
+.reasoning-text {
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.reasoning-text strong {
+  color: var(--text-main);
+}
+
+/* --------------------------------------------------------------------------
+   15. EMPTY STATE & SYSTEM STATUS
+   -------------------------------------------------------------------------- */
+/* .empty-state: Message when no results or prompt to start */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--card-bg);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  color: var(--text-subtle);
+  opacity: 0.6;
+}
+
+.empty-state h3 {
+  color: var(--text-main);
+  font-size: 1.25rem;
+}
+
+.empty-state p {
+  max-width: 450px;
+  font-size: 0.9rem;
+}
+
+/* --------------------------------------------------------------------------
+   16. LOADING SPINNERS & SKELETON SHIMMER
+   -------------------------------------------------------------------------- */
+/* .loading: Spinner animation */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid rgba(59, 130, 246, 0.15);
+  border-top-color: var(--primary);
+  border-right-color: var(--accent-cyan);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  color: var(--primary-light);
+  letter-spacing: 0.05em;
+}
+
+/* Shimmer placeholder loading state */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.09) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   17. KEYFRAME ANIMATIONS & UTILITY CLASSES
+   -------------------------------------------------------------------------- */
+/* .fade-in: Fade in animation class */
+.fade-in {
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+/* .slide-up: Slide up animation class */
+.slide-up {
+  animation: slideUp var(--transition-normal) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+@keyframes fillBar {
+  from {
+    width: 0%;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   18. RESPONSIVE DESIGN (TABLETS & SMARTPHONES)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .workspace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-container {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .header h1 {
+    font-size: 1.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .machine-selector {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .header {
+    padding: 1.75rem 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+  }
+
+  .stats-bar {
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .symptom-list-scroll {
+    max-height: 320px;
+  }
+
+  .diagnose-btn {
+    width: 100%;
+  }
+
+  .result-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .machine-selector {
+    grid-template-columns: 1fr;
+  }
+
+  .sensor-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .symptom-filter-input {
+    max-width: 100%;
+  }
+}

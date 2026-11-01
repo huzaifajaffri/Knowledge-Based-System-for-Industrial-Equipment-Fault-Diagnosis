@@ -1,0 +1,10 @@
+{
+  "name": "kbs-industrial-fault-diagnosis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Knowledge-Based System for Industrial Equipment Fault Diagnosis (Flask + HTML/CSS/JS). One-command local startup.",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "start": "node scripts/dev.js"
+  }
+}
